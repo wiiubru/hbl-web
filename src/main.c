@@ -2,8 +2,8 @@
 
 void _start() {
 	asm(
-      "lis %r1, 0x1ab5 ;"
-      "ori %r1, %r1, 0xd138 ;"
+		"lis %r1, 0x1ab5 ;"
+ 		"ori %r1, %r1, 0xd138 ;"
 	);
 	
 	InitLibs();

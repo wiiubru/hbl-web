@@ -42,6 +42,8 @@ void _start() {
 	GLOBAL_VARIABLES->OSScreenFlipBuffersEx(0);
 	GLOBAL_VARIABLES->OSScreenFlipBuffersEx(1);
 	
+	//A URL like http://local/exploit?hbl-web=http://local/file should work just fine
+	
 	char* url = 0;
 	for (url = (char*)0x1A000000; url < (char*)0x20000000; url++) {
 		if (*(unsigned int*)url == 0x68626C2D /* "hbl-" */ && *(unsigned int*)(url + 3) == 0x2D776562 /* "-web" */) {

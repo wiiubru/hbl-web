@@ -46,6 +46,7 @@ typedef struct _GlobalVariables {
 	void (*OSScreenSetBufferEx)(int buffer, void* addr);
 	void (*OSScreenPutFontEx)(int buffer, int x, int y, char* text);
 	void (*OSScreenFlipBuffersEx)(int buffer);
+	void (*OSScreenClearBufferEx)(int buffer, unsigned int colour);
 
 	void (*DCFlushRange)(void* addr, int len);
 } GlobalVariables;

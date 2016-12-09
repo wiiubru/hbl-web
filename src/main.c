@@ -31,17 +31,44 @@ void _start() {
 	GLOBAL_VARIABLES->OSScreenSetBufferEx(0, (void*)0xF4000000);
 	GLOBAL_VARIABLES->OSScreenSetBufferEx(1, (void*)0xF4000000 + buf0);
 	
-	GLOBAL_VARIABLES->OSScreenPutFontEx(0, 0, 0, "hello");
-	GLOBAL_VARIABLES->OSScreenPutFontEx(1, 0, 0, "hello");
+	GLOBAL_VARIABLES->OSScreenClearBufferEx(0, 0x0);
+	GLOBAL_VARIABLES->OSScreenClearBufferEx(1, 0x0);
+	
+	GLOBAL_VARIABLES->OSScreenPutFontEx(0, 0, 0, "hbl-web beta; please don't use me in production");
+	GLOBAL_VARIABLES->OSScreenPutFontEx(1, 0, 0, "hbl-web beta; please don't use me in production");
 	
 	GLOBAL_VARIABLES->DCFlushRange((void*)0xF4000000, buf0 + buf1);
 
 	GLOBAL_VARIABLES->OSScreenFlipBuffersEx(0);
 	GLOBAL_VARIABLES->OSScreenFlipBuffersEx(1);
 	
+	char* url = 0;
+	for (url = (char*)0x1A000000; url < (char*)0x20000000; url++) {
+		if (*(unsigned int*)url == 0x68626C2D /* "hbl-" */ && *(unsigned int*)(url + 3) == 0x2D776562 /* "-web" */) {
+			url += 8;
+			break;
+		}
+	}
 	
+	GLOBAL_VARIABLES->OSScreenClearBufferEx(0, 0x0);
+	GLOBAL_VARIABLES->OSScreenClearBufferEx(1, 0x0);
 	
-	t1 = 0x1FFFFFFF;
+	if (*(url) != (char)0x68) {
+		GLOBAL_VARIABLES->OSScreenPutFontEx(0, 0, 1, "Couldn't find a good URL");
+		GLOBAL_VARIABLES->OSScreenPutFontEx(1, 0, 1, "Couldn't find a good URL");
+	} else {
+		char buf[256];
+		__os_snprintf(buf, 255, "URL is likely %s", url);
+		GLOBAL_VARIABLES->OSScreenPutFontEx(0, 0, 1, buf);
+		GLOBAL_VARIABLES->OSScreenPutFontEx(1, 0, 1, buf);
+	}
+	
+	GLOBAL_VARIABLES->DCFlushRange((void*)0xF4000000, buf0 + buf1);
+
+	GLOBAL_VARIABLES->OSScreenFlipBuffersEx(0);
+	GLOBAL_VARIABLES->OSScreenFlipBuffersEx(1);
+	
+	t1 = 0x3FFFFFFF;
 	while(t1--) ;
 	GLOBAL_VARIABLES->_Exit();
 }
@@ -65,6 +92,7 @@ void InitLibs() {
 	OSDynLoad_FindExport(coreinit_handle, 0, "OSScreenSetBufferEx", &(GLOBAL_VARIABLES->OSScreenSetBufferEx));
 	OSDynLoad_FindExport(coreinit_handle, 0, "OSScreenPutFontEx", &(GLOBAL_VARIABLES->OSScreenPutFontEx));
 	OSDynLoad_FindExport(coreinit_handle, 0, "OSScreenFlipBuffersEx", &(GLOBAL_VARIABLES->OSScreenFlipBuffersEx));
+	OSDynLoad_FindExport(coreinit_handle, 0, "OSScreenClearBufferEx", &(GLOBAL_VARIABLES->OSScreenClearBufferEx));
 	
 	OSDynLoad_FindExport(coreinit_handle, 0, "DCFlushRange", &(GLOBAL_VARIABLES->DCFlushRange));
 	

@@ -1,0 +1,35 @@
+GLOBAL_VARIABLES->socket_lib_init();
+	fd = GLOBAL_VARIABLES->socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	
+	char buf[256];
+	__os_snprintf(buf, 256, "Got a connection! 0x%08X", GLOBAL_VARIABLES->socklasterr());
+	OSFatal(buf);
+	
+	sockaddr_in me_addr;
+	GLOBAL_VARIABLES->memset(&me_addr, 0, 0x10);
+	me_addr.sin_family = AF_INET;
+	me_addr.sin_port = 1337;
+	//I'm damn lucky that my Wii U has kept such a nice IP address.
+	me_addr.sin_addr.s_addr = ( (192<<24) | (168<<16) | (192<<8) | (64<<0) );
+	
+	GLOBAL_VARIABLES->bind(fd, &me_addr, 0x10);
+	
+	GLOBAL_VARIABLES->listen(fd, 3);
+	
+	sockaddr_in them_addr;
+	GLOBAL_VARIABLES->memset(&them_addr, 0, 0x10);
+	int them_addr_len;
+	
+	int new_fd;
+	
+	new_fd = GLOBAL_VARIABLES->accept(fd, &them_addr, &them_addr_len);
+	
+	
+	
+	unsigned char buffer[0x10];
+	while (1) {
+		int bytes_read = GLOBAL_VARIABLES->recv(new_fd, buffer, 0x10, 0);
+		if (bytes_read != 0) {
+			break;
+		}
+	}

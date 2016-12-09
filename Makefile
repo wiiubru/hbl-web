@@ -24,8 +24,8 @@ export TARGET	= code$(VER).bin
 export CFLAGS	= -c -DVER=$(VER)
 export LDFLAGS	= -Ttext 1800000 --oformat binary
 
-export CFILES	= $(foreach dir,$(SOURCES),$(dir)/$(notdir $(wildcard $(dir)/*.c)))
-export OFILES	= $(foreach dir,$(SOURCES),$(BUILD)/$(dir)/$(notdir $(basename $(wildcard $(dir)/*.c)).o))
+export CFILES	= $(foreach dir,$(SOURCES),$(wildcard $(dir)/*.c))
+export OFILES	= $(foreach cfl,$(CFILES),$(BUILD)/$(dir $(cfl))$(basename $(notdir $(cfl))).o)
 
 all: setup $(TARGET)
 
